@@ -1,12 +1,2 @@
-acen ticket 70
-acen mcdonalds 5.08
-acen melee 2
-acen big_top_restaurant 18
-acen mitsuwa 19
-acen bagel 3
-acen clock 25
-acen poster 20
-acen socks_uniqlo 10.50
-acen sushi 40
-acen hotel 57
-canoe fee 10
+chicago burger 5.03
+new_york cheescake 30
