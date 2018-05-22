@@ -1,4 +1,6 @@
-#2018 budget sheet
+#5/22/18
+#Andrew Kim
+#andrewdkim47
 import os
 
 class Budget:
