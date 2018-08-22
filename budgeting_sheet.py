@@ -9,6 +9,7 @@ class Budget:
 	budget = 0	#amount I can spend after spendings
 	my_dict = {}	#dictionary for sheet. ex: acen: mcdonalds: 5.08
 
+
 	def __init__(self, user_init_budget):
 		self.initial_budget = user_init_budget
 
@@ -35,11 +36,11 @@ class Budget:
 		if not os.path.exists(user_sheet):
 			print("Creating new sheet...")
 			new_sheet = open(user_sheet, 'w')
-
 		else:
 			with open(user_sheet, "r") as f:
 				text_file = f.read()
 				text_file = text_file.split("\n")
+				f.close()
 		return text_file
 
 		
@@ -51,12 +52,11 @@ class Budget:
 			for i in sheet_content:
 				temp = []
 				temp = i.split(" ")
-				print(temp) #fixme: delete this after this function is perfect
 				self.total_spendings += float(temp[2])
 				if temp[0] not in self.my_dict:
 					self.my_dict[temp[0]] = {}
 					self.my_dict[temp[0]][temp[1]] = temp[2]
-				elif temp[0] in self.my_dict and temp[1] in self.my_dict[temp[0]]: #fixme: how to i add acen hotel 57 and acen hotel 2 together?
+				elif temp[0] in self.my_dict and temp[1] in self.my_dict[temp[0]]:
 					total = self.my_dict[temp[0]][temp[1]]
 					total = float(total) + float(temp[2])
 					self.my_dict[temp[0]][temp[1]] = repr(total)
@@ -73,20 +73,51 @@ class Budget:
 		self.get_total_spendings()
 		self.get_budget()
 
+
+
 	def add_event(self, user_sheet):
 		usr_event = raw_input("Please type in the title of the event, the reason for spending, and the amount you spent.\n(ex: chicago burger 8.50)\n")
 		event_divided = []
 		event_divided = usr_event.split(" ")
 		if len(event_divided) == 3:
 			with open(user_sheet, "a") as f:
-				if os.stat(user_sheet).st_size == 0: #how to fix this
+				if os.stat(user_sheet).st_size == 0:
 					f.write(usr_event)
+					f.close()
 				else:
 					f.write("\n" + usr_event)
+					f.close()
 			print("Succesfully updated your sheet.")
 		else:
 			print("Sorry! incorrect format!")
 
+
+
+	def delete_event(self, user_sheet):
+		event_to_delete = raw_input("Which event would you like to delete? Copy word for word (ex. chicago burger 5)")
+		event_divided = []
+		event_divided = event_to_delete.split(" ")
+		if len(event_divided) == 3:
+			text_file = []
+			with open(user_sheet, "r") as f:
+				text_file = f.read()
+				text_file = text_file.split("\n")
+				f.close()
+			f = open(user_sheet,"w")
+			iter = 0
+			for line in text_file:
+				iter += 1
+				if line != event_to_delete:
+					if iter == len(text_file) - 1:
+						f.write(line)
+					else:
+						f.write(line + "\n")
+			f.close()
+			print("Successfully deleted the event")
+		else:
+			print("Sorry! incorrect format!")
+
+		
 
 
 #main:
@@ -116,15 +147,31 @@ else:
 #allow user to log more information
 repeat = 'h'
 while repeat != 'n':
-	usr_decision = raw_input("Would you like to log a spending event? (y or n)\n")
-	if usr_decision == 'y':
+	usr_decision = raw_input("Please select an option below:\n 1.) add event\n 2.) delete event\n 3.) show spending data\n 4.) quit\n")
+	if usr_decision == '1':
 		b.add_event(user_sheet)
-	elif usr_decision == 'n':
+	elif usr_decision == '4':
 		print("Thank you for using the budget sheet!!!!!\n")
 		repeat = 'n'
+	elif usr_decision == '2':
+		b.delete_event(user_sheet)
+	
+	#FIXME
+	elif usr_decision == '3':
+		sheet_content = b.read_file(user_sheet)
+		if not sheet_content:
+			print(user_sheet + " is empty!\n")
+		else:
+			print(sheet_content)
+			#b.set_dict(sheet_content)
+			#b.print_results()
 	else:
 		print("That is an incorrect option!")
 
 
 
 print("\n**********************************************************\n")
+
+
+#add a delete log feature, and a reshow data feature
+#save budget option?
